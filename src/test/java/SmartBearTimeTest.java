@@ -22,9 +22,10 @@ public class SmartBearTimeTest {
     @DisplayName("Check entries for both valid and invalid entries")
     void testDisplayEntries(){
 
-        assertEquals("Noon", smartBearTime.convertEntry("00:00"), "Checking for mid day");
-        assertEquals("Invalid entry", smartBearTime.convertEntry("0000"), "Checking invalid time");
-        assertEquals("Invalid time entry range", smartBearTime.convertEntry("20:60"), "Checking out of range time");
+        assertEquals("Midnight", smartBearTime.convertEntry("00:00"), "Checking for mid day");
+        assertEquals("Noon", smartBearTime.convertEntry("12:00"), "Checking for noon");
+        assertEquals("Invalid entry. Please try again (hh:mm): ", smartBearTime.convertEntry("0000"), "Checking invalid time");
+        assertEquals("Invalid entry. Please try again (hh:mm): ", smartBearTime.convertEntry("20:60"), "Checking out of range time");
     }
 
 }

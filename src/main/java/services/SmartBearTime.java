@@ -42,7 +42,8 @@ public class SmartBearTime implements SmartTimerInterface {
     @Override
     public String convertEntry(String time) {
         if ((Objects.isNull(time) || time.isEmpty()) || (time.length() < 4 || time.length() > 5) || !time.contains(":")){
-            throw new IllegalArgumentException("Invalid entry");
+            //throw new IllegalArgumentException("Invalid entry");
+            return "Invalid entry. Please try again (hh:mm): ";
         }
 
         String hrVal = time.substring(0, time.indexOf(":"));
@@ -52,7 +53,8 @@ public class SmartBearTime implements SmartTimerInterface {
         int min = Integer.parseInt(minVal);
 
         if ((hrRe < 0 || min < 0) || hrRe > 12 || min > 59){
-            throw new IllegalArgumentException("Invalid time entry range");
+            //throw new IllegalArgumentException("Invalid time entry range");
+            return "Invalid entry. Please try again (hh:mm): ";
         }
 
         return numberToWord(hrRe, min);
@@ -60,14 +62,44 @@ public class SmartBearTime implements SmartTimerInterface {
 
     @Override
     public String numberToWord(int hr, int min) {
-        if (hr == 0 && min == 0) return "Noon";
-        else if (min == 0) return hrNames[hr]+ " o'clock";
+        if (hr == 0 && min == 0) return "Midnight";
+        else if(hr == 0){
+            if(min < 30){
+                if (min == 15){
+                    return "quarter past midnight";
+                }
+                if (min >= 20 ){
+                    return tensNames[min / 10]+" "+hrNames[min % 10]+ " past midnight";
+                }
+                return tensNames[min]+ " past midnight";
+
+            }else{
+                min = 60 - min;
+                if (min == 15){
+                    return "quarter to "+hrNames[hr+1];
+                }
+                if (min >= 20 ){
+                    if (min == 30){
+                        return "half past midnight";
+                    }
+                    return tensNames[min / 10]+" "+hrNames[min % 10]+ " to "+hrNames[hr+1];
+                }
+                return tensNames[min]+ " to "+hrNames[hr+1];
+            }
+
+        }
+        else if (min == 0){
+            if (hr == 12){
+                return "Noon";
+            }
+            return hrNames[hr]+ " o'clock";
+        }
         else if (min == 30) {
             return "half past "+hrNames[hr] ;
         }
         else if (min < 30){
             if (min == 15){
-                return  "quarter past "+hrNames[hr];
+                return "quarter past "+hrNames[hr];
             }
             if (min >= 20){
                 return tensNames[min / 10]+" "+hrNames[min % 10]+ " past "+hrNames[hr];
